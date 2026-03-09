@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alexander Sokolov · The Vertical</title>
+    <!-- Шрифты: Space Grotesk + Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0c0b0a;
+            color: #e8e6e1;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Декоративные шарики */
+        .blob {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(180, 150, 120, 0.15), rgba(90, 70, 50, 0.05));
+            filter: blur(60px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .blob-1 {
+            top: -150px;
+            right: -100px;
+            background: radial-gradient(circle at 30% 30%, rgba(200, 170, 140, 0.18), rgba(100, 70, 40, 0.03));
+        }
+
+        .blob-2 {
+            bottom: -150px;
+            left: -100px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle at 70% 70%, rgba(140, 120, 160, 0.12), rgba(50, 40, 60, 0.02));
+        }
+
+        .blob-3 {
+            top: 40%;
+            left: 20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at 20% 80%, rgba(170, 140, 110, 0.12), transparent);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2.5rem;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ========== САЙДБАР ========== */
+        .sidebar {
+            position: sticky;
+            top: 2.5rem;
+            height: fit-content;
+            padding-right: 1rem;
+        }
+
+        .logo-area {
+            margin-bottom: 3rem;
+        }
+
+        .logo-name {
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-name span {
+            color: #b8a58e;
+            font-weight: 300;
+        }
+
+        .logo-desc {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #b09b86;
+            border-left: 2px solid #6a5c4e;
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+            font-weight: 350;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .nav-link {
+            color: #a29e96;
+            text-decoration: none;
+            font-weight: 350;
+            font-size: 1rem;
+            padding: 0.3rem 0;
+            transition: color 0.15s, transform 0.1s;
+            border-bottom: 1px solid transparent;
+            display: inline-block;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        .nav-link:hover {
+            color: #f0e3d6;
+            border-bottom: 1px solid #8a7a6a;
+        }
+
+        .nav-link.active {
+            color: #fff;
+            font-weight: 430;
+            border-bottom: 1px solid #c4ad95;
+        }
+
+        .social-links {
+            margin-top: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+
+        .social-link {
+            color: #cbbeb2;
+            font-size: 0.95rem;
+            transition: color 0.15s;
+            text-decoration: none;
+            border-bottom: 1px solid #4d433b;
+            padding-bottom: 2px;
+        }
+
+        .social-link:hover {
+            color: #f0e1ce;
+            border-bottom-color: #b7a087;
+        }
+
+        /* Переключатель языков */
+        .language-switch {
+            margin-top: 2rem;
+            display: flex;
+            gap: 0.8rem;
+            border-top: 1px solid #3a3530;
+            padding-top: 1.5rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid #5f5549;
+            color: #b8aa9c;
+            font-size: 0.8rem;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+        }
+
+        .lang-btn.active {
+            background: #8a7a6a;
+            border-color: #c4ad95;
+            color: #fff;
+        }
+
+        .lang-btn:hover {
+            border-color: #b7a087;
+            color: #f0e1ce;
+        }
+
+        /* ========== ОСНОВНОЙ КОНТЕНТ ========== */
+        .main-content {
+            min-width: 0;
+        }
+
+        .section {
+            margin-bottom: 6rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: #b09b86;
+            font-style: italic;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 320;
+            letter-spacing: -0.02em;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .section-title-light {
+            font-weight: 280;
+            color: #b9aa9a;
+        }
+
+        /* Био-карточка со стеклом */
+        .bio-glass {
+            background: rgba(30, 27, 24, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(200, 180, 160, 0.1);
+            padding: 2.8rem;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.8);
+        }
+
+        .bio-text {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #ddd6cf;
+            max-width: 750px;
+        }
+
+        .bio-text strong {
+            color: #f0e1d2;
+            font-weight: 430;
+        }
+
+        .bio-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: #cdb9a8;
+            margin: 2rem 0 1.5rem 0;
+            padding-left: 2rem;
+            border-left: 2px solid #7f6e5d;
+        }
+
+        /* КАРТОЧКА ЖУРНАЛА */
+        .journal-master-card {
+            background: linear-gradient(145deg, rgba(35, 31, 28, 0.7) 0%, rgba(22, 20, 18, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(170, 150, 130, 0.15);
+            border-radius: 48px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .journal-name {
+            font-size: 3.8rem;
+            font-weight: 320;
+            letter-spacing: -0.02em;
+            color: #fff3e9;
+            margin-bottom: 0.5rem;
+            line-height: 1.0;
+        }
+
+        .journal-name span {
+            font-weight: 250;
+            color: #b9a690;
+            font-size: 2.2rem;
+            margin-left: 0.5rem;
+        }
+
+        .journal-creation {
+            font-size: 1rem;
+            color: #a39281;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-bottom: 1px solid #3e3731;
+            padding-bottom: 1.2rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .journal-full-text {
+            font-size: 1.15rem;
+            color: #e2d9d0;
+            max-width: 800px;
+            background: rgba(0,0,0,0.2);
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid #4a413a;
+            margin: 1.8rem 0;
+        }
+
+        .journal-full-text p {
+            margin-bottom: 1.2rem;
+        }
+
+        .journal-full-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .journal-accent {
+            font-family: 'Playfair Display', serif;
+            color: #e6cfbb;
+            font-size: 1.3rem;
+            font-style: italic;
+            margin-top: 1.8rem;
+            text-align: right;
+            border-top: 1px dashed #5f5549;
+            padding-top: 1.5rem;
+        }
+
+        .glass-chip {
+            background: rgba(60, 55, 50, 0.5);
+            border: 1px solid rgba(180, 160, 140, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 0.7rem 2rem;
+            border-radius: 60px;
+            color: #e0d3c8;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.02rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .glass-chip:hover {
+            background: rgba(90, 75, 65, 0.6);
+            border-color: rgba(200, 175, 150, 0.4);
+        }
+
+        .glass-chip:before {
+            content: "●";
+            color: #bfa690;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .random-fact-box {
+            margin-top: 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .fact-display {
+            background: rgba(20, 18, 16, 0.6);
+            border: 1px solid #4c443e;
+            border-radius: 100px;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.95rem;
+            color: #cfc1b4;
+            min-width: 250px;
+        }
+
+        /* Раздел СЕЙЧАС - три карточки */
+        .now-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .now-card {
+            background: rgba(30, 27, 24, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid #4d443c;
+            border-radius: 30px;
+            padding: 1.8rem;
+        }
+
+        .now-card-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #b09c88;
+            margin-bottom: 0.8rem;
+        }
+
+        .now-card-content {
+            font-size: 1.2rem;
+            font-weight: 330;
+            color: #f0e2d6;
+        }
+
+        .quote-row {
+            background: rgba(0,0,0,0.25);
+            border-radius: 60px;
+            padding: 1rem 2rem;
+            margin: 2.5rem 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #4a4139;
+            flex-wrap: wrap;
+        }
+
+        #dailyQuote {
+            font-style: italic;
+            color: #dacfc4;
+            font-size: 1.1rem;
+        }
+
+        .footer-note {
+            margin-top: 4rem;
+            padding-top: 1.8rem;
+            border-top: 1px solid #35302b;
+            display: flex;
+            justify-content: space-between;
+            color: #7a6f66;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .sidebar {
+                position: static;
+                margin-bottom: 2rem;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .social-links {
+                margin-top: 0;
+                flex-direction: row;
+            }
+            .language-switch {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .journal-name { font-size: 2.8rem; }
+            .bio-glass { padding: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Декоративные шарики -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="container">
+        <!-- САЙДБАР -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-name" id="logoName">Alexander<span> Sokolov</span></div>
+                <div class="logo-desc" id="logoDesc">editor</div>
+            </div>
+            <nav class="nav" id="sideNav">
+                <a class="nav-link active" data-target="bio" id="navBio">Biography</a>
+                <a class="nav-link" data-target="journal" id="navJournal">Journal</a>
+                <a class="nav-link" data-target="now" id="navNow">Now</a>
+            </nav>
+            
+            <!-- Переключатель языков (RU/EN) -->
+            <div class="language-switch">
+                <button class="lang-btn active" id="lang-en">EN</button>
+                <button class="lang-btn" id="lang-ru">RU</button>
+            </div>
+
+            <!-- Соцсети: только почта и инстаграм -->
+            <div class="social-links">
+                <a href="mailto:alexsokolov240@gmail.com" class="social-link" id="socialEmail">email</a>
+                <a href="https://www.instagram.com/asksokol" target="_blank" class="social-link" id="socialInstagram">instagram</a>
+            </div>
+        </aside>
+
+        <!-- ОСНОВНОЙ КОНТЕНТ -->
+        <main class="main-content">
+            <!-- СЕКЦИЯ БИОГРАФИЯ -->
+            <section id="bio" class="section">
+                <div class="section-header">
+                    <span class="section-number">01</span>
+                    <h2 class="section-title" id="bioTitle">biography<span class="section-title-light">.</span></h2>
+                </div>
+                <div class="bio-glass">
+                    <div class="bio-text" id="bioText">
+                        <p><strong>Alexander Sokolov</strong> was born on June 24, 1998 in Moscow.</p>
+                        <p>Since childhood, he has been passionate about books and magazines, spending much of his time reading and studying print publications. Later, he began to try his hand at criticism — writing reviews, analyzing texts, searching for his own voice.</p>
+                        <p>In 2020, he graduated from Lomonosov Moscow State University with a degree in Journalism (Educational program "International Journalism").</p>
+                        <p>In 2026, he founded the online journal The Vertical. He is currently working on a book, "The Matter of Silence".</p>
+                    </div>
+                    <div class="bio-quote" id="bioQuote">
+                        «Criticism is a way of dialogue, and dialogue is a way to understand»
+                    </div>
+                </div>
+            </section>
+
+            <!-- СЕКЦИЯ ЖУРНАЛ -->
+            <section id="journal" class="section">
+                <div class="section-header">
+                    <span class="section-number">02</span>
+                    <h2 class="section-title" id="journalTitle">journal<span class="section-title-light"> The Vertical</span></h2>
+                </div>
+                
+                <div class="journal-master-card">
+                    <div class="journal-name" id="journalName">The Vertical <span id="journalNameSpan">— the axis of meaning</span></div>
+                    <div class="journal-creation" id="journalCreation">Founded February 8, 2026</div>
+
+                    <div class="journal-full-text" id="journalText">
+                        <p><strong>The Vertical</strong> is an online magazine (media) about people, their inner world, and the stories behind the facade of publicity. We do not chase news or superficial facts. Our focus is thoughts, feelings, principles, personal scenarios, and the search for meaning.</p>
+                        <p>Each piece is an attempt to look beyond the obvious and truly understand a person. We conduct deep, human interviews with no room for hasty conclusions. Only voice, intonation, pauses. Only what constitutes the vertical of a personality.</p>
+                    </div>
+
+                    <div class="journal-accent" id="journalAccent">
+                        — behind the facade, there is always someone. we seek the vertical.
+                    </div>
+
+                    <div class="random-fact-box">
+                        <button class="glass-chip" id="randomFactBtn">principle of the issue</button>
+                        <span class="fact-display" id="factDisplay">click to reveal</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- СЕКЦИЯ СЕЙЧАС (без "слушаю") -->
+            <section id="now" class="section">
+                <div class="section-header">
+                    <span class="section-number">03</span>
+                    <h2 class="section-title" id="nowTitle">now<span class="section-title-light">.</span></h2>
+                </div>
+
+                <div class="now-grid">
+                    <div class="now-card">
+                        <div class="now-card-label" id="readingLabel">reading</div>
+                        <div class="now-card-content" id="readingText">Vasily Rozanov, "Solitary" — Russian philosopher of the early 20th century</div>
+                    </div>
+                    <div class="now-card">
+                        <div class="now-card-label" id="writingLabel">writing</div>
+                        <div class="now-card-content" id="writingText">Book "The Matter of Silence" — on the poetics of the interview</div>
+                    </div>
+                    <div class="now-card">
+                        <div class="now-card-label" id="plansLabel">plans</div>
+                        <div class="now-card-content" id="plansText">To make The Vertical one of the leading journals and provide a platform for many individuals to experience what it's like to be part of a magazine — to discover their voice within its pages.</div>
+                    </div>
+                </div>
+
+                <div class="quote-row">
+                    <span id="dailyQuote">«Minimalism is not emptiness, it's precision»</span>
+                    <button class="glass-chip" id="refreshQuoteBtn" style="padding:0.4rem 1.5rem;">another</button>
+                </div>
+            </section>
+
+            <!-- ФУТЕР -->
+            <footer class="footer-note">
+                <div id="copyright">© Alexander Sokolov, 2026</div>
+                <div id="greeting"></div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        (function() {
+            // Навигация
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = {
+                bio: document.getElementById('bio'),
+                journal: document.getElementById('journal'),
+                now: document.getElementById('now')
+            };
+
+            function setActiveLink(targetId) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.target === targetId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            function scrollToSection(sectionId) {
+                const section = sections[sectionId];
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    setActiveLink(sectionId);
+                }
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.dataset.target;
+                    if (target) scrollToSection(target);
+                });
+            });
+
+            // Intersection Observer
+            const observerOptions = { threshold: 0.3, rootMargin: '-20px 0px -20px 0px' };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setActiveLink(entry.target.getAttribute('id'));
+                    }
+                });
+            }, observerOptions);
+
+            Object.values(sections).forEach(section => {
+                if (section) observer.observe(section);
+            });
+
+            // Интерактив для журнала
+            const principles = {
+                en: [
+                    '«Listen to the silence between words»',
+                    '«A person is more than their profession»',
+                    '«Not publicity, but depth»',
+                    '«An interview is a meeting, not an interrogation»',
+                    '«Every piece is a vertical»',
+                    '«No headlines, only voices»',
+                    '«Behind the facade, there is always the personal»'
+                ],
+                ru: [
+                    '«Слушать тишину между слов»',
+                    '«Человек сложнее своей профессии»',
+                    '«Не публичность, а глубина»',
+                    '«Интервью — это встреча, а не допрос»',
+                    '«Каждый материал — вертикаль»',
+                    '«Без заголовков, только голоса»',
+                    '«За фасадом всегда личное»'
+                ]
+            };
+
+            const quotes = {
+                en: [
+                    '«Meaning does not lie on the surface»',
+                    '«The vertical is the direction inward»',
+                    '«Slowness brings us back to ourselves»',
+                    '«A person is what they hide»',
+                    '«Silence helps to hear the other»'
+                ],
+                ru: [
+                    '«Смысл не лежит на поверхности»',
+                    '«Вертикаль — это направление внутрь»',
+                    '«Медленность возвращает нас к себе»',
+                    '«Человек — это то, что он скрывает»',
+                    '«Тишина помогает слышать другого»'
+                ]
+            };
+
+            const factBtn = document.getElementById('randomFactBtn');
+            const factDisplay = document.getElementById('factDisplay');
+            const quoteEl = document.getElementById('dailyQuote');
+            const refreshBtn = document.getElementById('refreshQuoteBtn');
+
+            function getCurrentLang() {
+                return document.getElementById('lang-en').classList.contains('active') ? 'en' : 'ru';
+            }
+
+            function updateRandomFact() {
+                const lang = getCurrentLang();
+                const principleList = principles[lang];
+                factDisplay.textContent = principleList[Math.floor(Math.random() * principleList.length)];
+            }
+
+            function updateQuote() {
+                const lang = getCurrentLang();
+                const quoteList = quotes[lang];
+                quoteEl.textContent = quoteList[Math.floor(Math.random() * quoteList.length)];
+            }
+
+            if (factBtn && factDisplay) {
+                factBtn.addEventListener('click', updateRandomFact);
+            }
+
+            if (refreshBtn && quoteEl) {
+                refreshBtn.addEventListener('click', updateQuote);
+            }
+
+            // Приветствие
+            const greetEl = document.getElementById('greeting');
+            function updateGreeting() {
+                const hour = new Date().getHours();
+                const lang = getCurrentLang();
+                if (lang === 'en') {
+                    if (hour < 12) greetEl.textContent = 'good morning';
+                    else if (hour < 18) greetEl.textContent = 'good afternoon';
+                    else greetEl.textContent = 'good evening';
+                } else {
+                    if (hour < 12) greetEl.textContent = 'доброе утро';
+                    else if (hour < 18) greetEl.textContent = 'добрый день';
+                    else greetEl.textContent = 'добрый вечер';
+                }
+            }
+            updateGreeting();
+
+            // ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ
+            const langEn = document.getElementById('lang-en');
+            const langRu = document.getElementById('lang-ru');
+            
+            // Тексты для всех элементов
+            const translations = {
+                en: {
+                    logoName: 'Alexander<span> Sokolov</span>',
+                    logoDesc: 'editor',
+                    navBio: 'Biography',
+                    navJournal: 'Journal',
+                    navNow: 'Now',
+                    socialEmail: 'email',
+                    socialInstagram: 'instagram',
+                    bioTitle: 'biography.',
+                    bioText: '<p><strong>Alexander Sokolov</strong> was born on June 24, 1998 in Moscow.</p><p>Since childhood, he has been passionate about books and magazines, spending much of his time reading and studying print publications. Later, he began to try his hand at criticism — writing reviews, analyzing texts, searching for his own voice.</p><p>In 2020, he graduated from Lomonosov Moscow State University with a degree in Journalism (Educational program "International Journalism").</p><p>In 2026, he founded the online journal The Vertical. He is currently working on a book, "The Matter of Silence".</p>',
+                    bioQuote: '«Criticism is a way of dialogue, and dialogue is a way to understand»',
+                    journalTitle: 'journal The Vertical',
+                    journalNameSpan: '— the axis of meaning',
+                    journalCreation: 'Founded February 8, 2026',
+                    journalText: '<p><strong>The Vertical</strong> is an online magazine (media) about people, their inner world, and the stories behind the facade of publicity. We do not chase news or superficial facts. Our focus is thoughts, feelings, principles, personal scenarios, and the search for meaning.</p><p>Each piece is an attempt to look beyond the obvious and truly understand a person. We conduct deep, human interviews with no room for hasty conclusions. Only voice, intonation, pauses. Only what constitutes the vertical of a personality.</p>',
+                    journalAccent: '— behind the facade, there is always someone. we seek the vertical.',
+                    randomFactBtn: 'principle of the issue',
+                    factDisplay: 'click to reveal',
+                    readingLabel: 'reading',
+                    readingText: 'Vasily Rozanov, "Solitary" — Russian philosopher of the early 20th century',
+                    writingLabel: 'writing',
+                    writingText: 'Book "The Matter of Silence" — on the poetics of the interview',
+                    plansLabel: 'plans',
+                    plansText: 'To make The Vertical one of the leading journals and provide a platform for many individuals to experience what it\'s like to be part of a magazine — to discover their voice within its pages.',
+                    refreshQuoteBtn: 'another',
+                    copyright: '© Alexander Sokolov, 2026'
+                },
+                ru: {
+                    logoName: 'Александр<span> Соколов</span>',
+                    logoDesc: 'редактор',
+                    navBio: 'Биография',
+                    navJournal: 'Журнал',
+                    navNow: 'Сейчас',
+                    socialEmail: 'почта',
+                    socialInstagram: 'инстаграм',
+                    bioTitle: 'биография.',
+                    bioText: '<p><strong>Александр Соколов</strong> родился 24 июня 1998 года в Москве.</p><p>С детства увлекался книгами и журналами, много времени проводил за чтением и изучением печатных изданий. Позже начал пробовать себя в критике — писал рецензии, анализировал тексты, искал собственный голос.</p><p>В 2020 году окончил Московский государственный университет имени М.В. Ломоносова по направлению подготовки «Журналистика» (образовательная программа «Международная журналистика»).</p><p>В 2026 году основал интернет-журнал The Vertical. В настоящее время работает над книгой «Материя тишины».</p>',
+                    bioQuote: '«Критика — это способ диалога, а диалог — это способ понять»',
+                    journalTitle: 'журнал The Vertical',
+                    journalNameSpan: '— вертикаль смысла',
+                    journalCreation: 'Основан 8 февраля 2026 года',
+                    journalText: '<p><strong>The Vertical</strong> — это интернет-журнал (медиа) о людях, их внутреннем мире и историях за фасадом публичности. Мы не гонимся за новостями и поверхностными фактами. Наша тема — мысли, чувства, принципы, личные сценарии и поиск смыслов.</p><p>Каждый материал — это попытка заглянуть за очевидное и понять человека по-настоящему. Мы делаем глубокие, человечные интервью, в которых нет места поспешным выводам. Только голос, интонация, паузы. Только то, что составляет вертикаль личности.</p>',
+                    journalAccent: '— за фасадом всегда кто-то есть. мы ищем вертикаль.',
+                    randomFactBtn: 'принцип номера',
+                    factDisplay: 'нажми, чтобы узнать',
+                    readingLabel: 'читаю',
+                    readingText: 'Василий Розанов, «Уединённое» — русский философ начала XX века',
+                    writingLabel: 'пишу',
+                    writingText: 'Книга «Материя тишины» — о поэтике интервью',
+                    plansLabel: 'в планах',
+                    plansText: 'Сделать The Vertical одним из ведущих журналов и предоставить возможность многим личностям попробовать себя в роли участника — обрести свой голос на его страницах.',
+                    refreshQuoteBtn: 'другая',
+                    copyright: '© Александр Соколов, 2026'
+                }
+            };
+
+            function setLanguage(lang) {
+                // Обновляем активные кнопки
+                if (lang === 'en') {
+                    langEn.classList.add('active');
+                    langRu.classList.remove('active');
+                } else {
+                    langRu.classList.add('active');
+                    langEn.classList.remove('active');
+                }
+
+                // Обновляем все тексты
+                document.getElementById('logoName').innerHTML = translations[lang].logoName;
+                document.getElementById('logoDesc').textContent = translations[lang].logoDesc;
+                document.getElementById('navBio').textContent = translations[lang].navBio;
+                document.getElementById('navJournal').textContent = translations[lang].navJournal;
+                document.getElementById('navNow').textContent = translations[lang].navNow;
+                document.getElementById('socialEmail').textContent = translations[lang].socialEmail;
+                document.getElementById('socialInstagram').textContent = translations[lang].socialInstagram;
+                document.getElementById('bioTitle').innerHTML = translations[lang].bioTitle;
+                document.getElementById('bioText').innerHTML = translations[lang].bioText;
+                document.getElementById('bioQuote').textContent = translations[lang].bioQuote;
+                document.getElementById('journalTitle').innerHTML = translations[lang].journalTitle;
+                document.getElementById('journalNameSpan').textContent = translations[lang].journalNameSpan;
+                document.getElementById('journalCreation').textContent = translations[lang].journalCreation;
+                document.getElementById('journalText').innerHTML = translations[lang].journalText;
+                document.getElementById('journalAccent').textContent = translations[lang].journalAccent;
+                document.getElementById('randomFactBtn').innerHTML = '● ' + translations[lang].randomFactBtn;
+                document.getElementById('factDisplay').textContent = translations[lang].factDisplay;
+                document.getElementById('readingLabel').textContent = translations[lang].readingLabel;
+                document.getElementById('readingText').textContent = translations[lang].readingText;
+                document.getElementById('writingLabel').textContent = translations[lang].writingLabel;
+                document.getElementById('writingText').textContent = translations[lang].writingText;
+                document.getElementById('plansLabel').textContent = translations[lang].plansLabel;
+                document.getElementById('plansText').textContent = translations[lang].plansText;
+                document.getElementById('refreshQuoteBtn').innerHTML = '● ' + translations[lang].refreshQuoteBtn;
+                document.getElementById('copyright').textContent = translations[lang].copyright;
+
+                // Обновляем greeting
+                updateGreeting();
+
+                // Сбрасываем factDisplay
+                factDisplay.textContent = translations[lang].factDisplay;
+
+                // Обновляем цитату
+                const quoteList = quotes[lang];
+                quoteEl.textContent = quoteList[Math.floor(Math.random() * quoteList.length)];
+            }
+
+            langEn.addEventListener('click', () => setLanguage('en'));
+            langRu.addEventListener('click', () => setLanguage('ru'));
+
+            // Инициализация (английский по умолчанию)
+            setLanguage('en');
+
+            // Убираем telegram из соцсетей (уже удалён из HTML)
+        })();
+    </script>
+</body>
+</html>
