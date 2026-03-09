@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alexander Sokolov · The Vertical</title>
-    <!-- Шрифты: Space Grotesk + Playfair Display -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -27,7 +26,6 @@
             overflow-x: hidden;
         }
 
-        /* Декоративные шарики */
         .blob {
             position: fixed;
             width: 400px;
@@ -72,7 +70,6 @@
             z-index: 2;
         }
 
-        /* ========== САЙДБАР ========== */
         .sidebar {
             position: sticky;
             top: 2.5rem;
@@ -161,7 +158,6 @@
             border-bottom-color: #b7a087;
         }
 
-        /* Переключатель языков */
         .language-switch {
             margin-top: 2rem;
             display: flex;
@@ -195,7 +191,6 @@
             color: #f0e1ce;
         }
 
-        /* ========== ОСНОВНОЙ КОНТЕНТ ========== */
         .main-content {
             min-width: 0;
         }
@@ -232,7 +227,6 @@
             color: #b9aa9a;
         }
 
-        /* Био-карточка со стеклом */
         .bio-glass {
             background: rgba(30, 27, 24, 0.6);
             backdrop-filter: blur(12px);
@@ -265,7 +259,6 @@
             border-left: 2px solid #7f6e5d;
         }
 
-        /* КАРТОЧКА ЖУРНАЛА */
         .journal-master-card {
             background: linear-gradient(145deg, rgba(35, 31, 28, 0.7) 0%, rgba(22, 20, 18, 0.8) 100%);
             backdrop-filter: blur(10px);
@@ -380,7 +373,6 @@
             min-width: 250px;
         }
 
-        /* Раздел СЕЙЧАС - три карточки */
         .now-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -473,13 +465,11 @@
     </style>
 </head>
 <body>
-    <!-- Декоративные шарики -->
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
 
     <div class="container">
-        <!-- САЙДБАР -->
         <aside class="sidebar">
             <div class="logo-area">
                 <div class="logo-name" id="logoName">Alexander<span> Sokolov</span></div>
@@ -491,22 +481,18 @@
                 <a class="nav-link" data-target="now" id="navNow">Now</a>
             </nav>
             
-            <!-- Переключатель языков (RU/EN) -->
             <div class="language-switch">
                 <button class="lang-btn active" id="lang-en">EN</button>
                 <button class="lang-btn" id="lang-ru">RU</button>
             </div>
 
-            <!-- Соцсети: только почта и инстаграм -->
             <div class="social-links">
                 <a href="mailto:alexsokolov240@gmail.com" class="social-link" id="socialEmail">email</a>
                 <a href="https://www.instagram.com/asksokol" target="_blank" class="social-link" id="socialInstagram">instagram</a>
             </div>
         </aside>
 
-        <!-- ОСНОВНОЙ КОНТЕНТ -->
         <main class="main-content">
-            <!-- СЕКЦИЯ БИОГРАФИЯ -->
             <section id="bio" class="section">
                 <div class="section-header">
                     <span class="section-number">01</span>
@@ -525,7 +511,6 @@
                 </div>
             </section>
 
-            <!-- СЕКЦИЯ ЖУРНАЛ -->
             <section id="journal" class="section">
                 <div class="section-header">
                     <span class="section-number">02</span>
@@ -552,7 +537,6 @@
                 </div>
             </section>
 
-            <!-- СЕКЦИЯ СЕЙЧАС (без "слушаю") -->
             <section id="now" class="section">
                 <div class="section-header">
                     <span class="section-number">03</span>
@@ -580,7 +564,6 @@
                 </div>
             </section>
 
-            <!-- ФУТЕР -->
             <footer class="footer-note">
                 <div id="copyright">© Alexander Sokolov, 2026</div>
                 <div id="greeting"></div>
@@ -590,7 +573,6 @@
 
     <script>
         (function() {
-            // Навигация
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = {
                 bio: document.getElementById('bio'),
@@ -623,7 +605,6 @@
                 });
             });
 
-            // Intersection Observer
             const observerOptions = { threshold: 0.3, rootMargin: '-20px 0px -20px 0px' };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -637,7 +618,6 @@
                 if (section) observer.observe(section);
             });
 
-            // Интерактив для журнала
             const principles = {
                 en: [
                     '«Listen to the silence between words»',
@@ -705,7 +685,6 @@
                 refreshBtn.addEventListener('click', updateQuote);
             }
 
-            // Приветствие
             const greetEl = document.getElementById('greeting');
             function updateGreeting() {
                 const hour = new Date().getHours();
@@ -722,11 +701,9 @@
             }
             updateGreeting();
 
-            // ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ
             const langEn = document.getElementById('lang-en');
             const langRu = document.getElementById('lang-ru');
             
-            // Тексты для всех элементов
             const translations = {
                 en: {
                     logoName: 'Alexander<span> Sokolov</span>',
@@ -785,7 +762,6 @@
             };
 
             function setLanguage(lang) {
-                // Обновляем активные кнопки
                 if (lang === 'en') {
                     langEn.classList.add('active');
                     langRu.classList.remove('active');
@@ -794,7 +770,6 @@
                     langEn.classList.remove('active');
                 }
 
-                // Обновляем все тексты
                 document.getElementById('logoName').innerHTML = translations[lang].logoName;
                 document.getElementById('logoDesc').textContent = translations[lang].logoDesc;
                 document.getElementById('navBio').textContent = translations[lang].navBio;
@@ -821,13 +796,10 @@
                 document.getElementById('refreshQuoteBtn').innerHTML = '● ' + translations[lang].refreshQuoteBtn;
                 document.getElementById('copyright').textContent = translations[lang].copyright;
 
-                // Обновляем greeting
                 updateGreeting();
 
-                // Сбрасываем factDisplay
                 factDisplay.textContent = translations[lang].factDisplay;
 
-                // Обновляем цитату
                 const quoteList = quotes[lang];
                 quoteEl.textContent = quoteList[Math.floor(Math.random() * quoteList.length)];
             }
@@ -835,11 +807,10 @@
             langEn.addEventListener('click', () => setLanguage('en'));
             langRu.addEventListener('click', () => setLanguage('ru'));
 
-            // Инициализация (английский по умолчанию)
             setLanguage('en');
 
-            // Убираем telegram из соцсетей (уже удалён из HTML)
         })();
     </script>
 </body>
+
 </html>
